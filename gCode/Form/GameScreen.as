@@ -3,6 +3,7 @@
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import gCode.Ship;
 	import qEngine.Console;
 	import qEngine.qForm.Form;
 	import qEngine.qForm.FormManager;
@@ -15,6 +16,8 @@
 	public class GameScreen extends Form implements I_Form
 	{
 		var canvas:Canvas = new Canvas();
+		
+		var ship:Ship = new Ship()
 		
 		public function GameScreen() {
 			stop();			
@@ -30,6 +33,10 @@
 			addChild(Console.display)
 			Console.display.y = 100
 			
+			ship.initialize()
+			addChild(ship)
+			ship.x = 800 / 2
+			ship.y = 600 / 2
 		}
 		
 		private function keyDown(e:KeyboardEvent):void {
