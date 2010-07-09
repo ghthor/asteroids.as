@@ -60,8 +60,8 @@
 			
 			Entity.canvas = canvas
 			
-			addChild(Console.display)
-			Console.display.y = 100
+			//addChild(Console.display)
+			//Console.display.y = 100
 			
 			ship.initialize()
 			addChild(ship)
@@ -107,6 +107,8 @@
 				case Keyboard.RIGHT:
 					rotRight = true
 					break
+				case Keyboard.ENTER:
+				case Keyboard.NUMPAD_ENTER:
 				case Keyboard.SPACE:
 					firing = true
 					break
@@ -134,6 +136,8 @@
 				case Keyboard.RIGHT:
 					rotRight = false
 					break
+				case Keyboard.ENTER:
+				case Keyboard.NUMPAD_ENTER:
 				case Keyboard.SPACE:
 					firing = false
 					break
