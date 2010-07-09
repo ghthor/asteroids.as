@@ -169,11 +169,11 @@
 			fireTick++
 			
 			
-			for (var i:int = 0; i < 1.0/tickTime; i++) {
+			for (var i:int = 0; i < 1.0/tickResolution; i++) {
 				
 				// Tick the ship Forward
 				if (!ship.Dead) {
-					ship.tick(tickTime)
+					ship.tick(tickResolution)
 				}
 				
 				// Tick the Bullets Forward
@@ -250,19 +250,19 @@
 			return true
 		}
 		
-		var tickTime:Number = .025
-		public function tickBullets(ele:Bullet, i:int, arr:Array):Boolean {
-			if (ele.Dead) {
-				this.removeChild(ele)
+		var tickResolution:Number = .025
+		public function tickBullets(bullet:Bullet, i:int, arr:Array):Boolean {
+			if (bullet.Dead) {
+				this.removeChild(bullet)
 				return false
 			}else {
-				ele.tick(tickTime)
+				bullet.tick(tickResolution)
 				return true
 			}
 		}
 		
 		public function tickAsteroids(asteroid:Asteroid, i:int, arr:Array):Boolean {
-			asteroid.tick(tickTime)
+			asteroid.tick(tickResolution)
 			return true
 		}
 		
