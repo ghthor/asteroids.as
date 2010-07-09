@@ -36,7 +36,7 @@
 		public static const BulletsPerSec:Number = 8
 		
 		// Asteroids
-		var numRoids:Number = 4
+		var numRoids:Number = 5
 		var asteroids:Array = new Array()
 		
 		public static const StageWidth:Number = 800
@@ -146,10 +146,12 @@
 			}
 		}
 		
-		var fireTick:Number = 60
+		var fireTick:Number = FPS
 		private function tick(e:Event):void {
 			
 			//ship.updateFacing(mouseCoords)
+			
+			// Process the Player's Input
 			if (rotLeft && !ship.Dead) {
 				ship.rotate(-RotationPerTick)
 			}
@@ -162,6 +164,9 @@
 			if (backward && !ship.Dead) {
 				ship.accelBackwards()
 			}
+			
+			fireTick++
+			// Spawn a bullet
 			if (firing && !ship.Dead) {
 				if (fireTick >= FPS/BulletsPerSec) {
 					fireTick = 0
@@ -170,9 +175,8 @@
 					bullets.push(b)
 				}
 			}
-			fireTick++
 			
-			
+			// Tick everything foward and do Collison Detection
 			for (var i:int = 0; i < 1.0/tickResolution; i++) {
 				
 				// Tick the ship Forward
@@ -201,6 +205,7 @@
 				}
 			}
 			
+			// If the playe is dead we need to Respawn them
 			if (ship.Dead && ship.lives > 0) {
 				deathTicks++
 				
@@ -256,6 +261,8 @@
 		}
 		
 		var tickResolution:Number = .025
+		
+		/// filter func for Bullets tick
 		public function tickBullets(bullet:Bullet, i:int, arr:Array):Boolean {
 			if (bullet.Dead) {
 				this.removeChild(bullet)
@@ -266,6 +273,7 @@
 			}
 		}
 		
+		/// forEach func for asteroids tick
 		public function tickAsteroids(asteroid:Asteroid, i:int, arr:Array):Boolean {
 			asteroid.tick(tickResolution)
 			return true
