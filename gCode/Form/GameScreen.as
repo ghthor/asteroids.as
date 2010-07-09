@@ -1,10 +1,13 @@
 ﻿package gCode.Form
 {
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
+	import gCode.Asteroid;
 	import gCode.Bullet;
+	import gCode.I_Asteroid;
 	import gCode.Ship;
 	import qEngine.Console;
 	import qEngine.qForm.Form;
@@ -25,6 +28,9 @@
 		var maxSpeed:Number = 10 // pixels per Frame
 		
 		var bullets:Array = new Array()
+		
+		var numRoids:Number = 7
+		var asteroids:Array = new Array()
 		
 		public static const StageWidth:Number = 800
 		public static const StageHeight:Number = 600
@@ -55,6 +61,13 @@
 			addChild(ship)
 			ship.x = 800 / 2
 			ship.y = 600 / 2
+			
+			for (var i:int = 0; i < numRoids; i++) {
+				var a:Asteroid = new Asteroid()
+				a.randomize()
+				addChild(a)
+				asteroids.push(a)
+			}
 		}
 		
 		var forward:Boolean = false
@@ -149,20 +162,61 @@
 			fireTick++
 			ship.tick()
 			
-			if (bullets.length > 0) {
-				bullets = bullets.filter(tickBullets)
+			for (var i:int = 0; i < 1/tickTime; i++) {
+				if (bullets.length > 0) {
+					bullets = bullets.filter(tickBullets)
+				}
+				if (asteroids.length > 0) {
+					asteroids = asteroids.filter(tickAsteroids)
+				}
+				
+				if (bullets.length > 0) {
+					bullets = bullets.filter(collideBullets)
+				}
 			}
+			
+			
 			// The Game Loop
 		}
 		
+		public function collideBullets(bullet:Bullet, i:int, arr:Array):Boolean {
+			var hit:Boolean = false
+			for (var i:int = 0; i < asteroids.length; i++) {
+				hit = bullet.ChkCollide(asteroids[i])
+				if (hit) {
+					
+					var asteroid:I_Asteroid = (asteroids[i] as I_Asteroid)
+					if (asteroid.canSplit()) {
+						// Split the Asteroid
+						for (var j:int = 0; j < 2; j++) {
+							var temp:Asteroid = asteroid.split(new Vector2D())
+							addChild(temp)
+							asteroids.push(temp)
+						}
+					}
+					removeChild(asteroids[i])
+					asteroids.splice(i, 1)
+					removeChild(bullet)
+					return false
+				}
+			}
+			return true
+		}
+		
+		var tickTime:Number = .05
 		public function tickBullets(ele:Bullet, i:int, arr:Array):Boolean {
 			if (ele.Dead) {
 				this.removeChild(ele)
 				return false
 			}else {
-				ele.tick()
+				ele.tick(tickTime)
 				return true
 			}
+		}
+		
+		public function tickAsteroids(asteroid:Asteroid, i:int, arr:Array):Boolean {
+			asteroid.tick(tickTime)
+			return true
 		}
 		
 		var mouseCoords:Vector2D = new Vector2D()

@@ -10,16 +10,16 @@
 	public class Bullet extends Entity {
 		
 		
-		var MaxTravelDistance:Number = (new Vector2D(GameScreen.StageWidth, GameScreen.StageHeight)).length
+		var MaxTravelDistance:Number = (new Vector2D(GameScreen.StageWidth, GameScreen.StageHeight)).length / 3
 		var DistanceTraveled:Number = 0
 		
 		public var Dead:Boolean = false
-		public function tick() {
-			x = x + velocity.x
-			y = y + velocity.y
+		public function tick(time:Number) {
+			x = x + (velocity.x * time)
+			y = y + (velocity.y * time)
 			
-			DistanceTraveled += velocity.length
-			if (DistanceTraveled >= MaxTravelDistance) { Dead = true }			
+			DistanceTraveled += (velocity.length * time)
+			if (DistanceTraveled >= MaxTravelDistance) { Dead = true }		
 			WrapAround()
 		}
 	}
