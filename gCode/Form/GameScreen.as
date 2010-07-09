@@ -22,14 +22,20 @@
 	 */
 	public class GameScreen extends Form implements I_Form
 	{
+		// useless atm
 		var canvas:Canvas = new Canvas();
 		
+		// Player controlled Ship
 		var ship:Ship = new Ship()
+		public static const maxSpeed:Number = 10 // pixels per Frame
 		
-		var maxSpeed:Number = 10 // pixels per Frame
-		
+		// The Bullets that are in Play fired from the ship
 		var bullets:Array = new Array()
 		
+		public static const BulletSpeed:Number = 11
+		public static const BulletsPerSec:Number = 8
+		
+		// Asteroids
 		var numRoids:Number = 4
 		var asteroids:Array = new Array()
 		
@@ -40,9 +46,6 @@
 		public static const MaxSpeed:Number = 10 // pixels per frame
 		public static const Drag:Number = -.015
 		public static const RotationPerTick:Number = 6 // degs per tick
-		
-		public static const BulletSpeed:Number = 11
-		public static const BulletsPerSec:Number = 8
 		
 		public function GameScreen() {
 			stop();			
@@ -62,8 +65,8 @@
 			
 			ship.initialize()
 			addChild(ship)
-			ship.X = 800 / 2
-			ship.Y = 600 / 2
+			ship.X = StageWidth / 2
+			ship.Y = StageHeight / 2
 			
 			for (var i:int = 0; i < numRoids; i++) {
 				var a:Asteroid = new Asteroid()
@@ -143,19 +146,19 @@
 		private function tick(e:Event):void {
 			
 			//ship.updateFacing(mouseCoords)
-			if (rotLeft) {
+			if (rotLeft && !ship.Dead) {
 				ship.rotate(-RotationPerTick)
 			}
-			if (rotRight) {
+			if (rotRight && !ship.Dead) {
 				ship.rotate(RotationPerTick)
 			}
-			if (forward) {
+			if (forward && !ship.Dead) {
 				ship.accelForward()
 			}
-			if (backward) {
+			if (backward && !ship.Dead) {
 				ship.accelBackwards()
 			}
-			if (firing) {
+			if (firing && !ship.Dead) {
 				if (fireTick >= FPS/BulletsPerSec) {
 					fireTick = 0
 					var b:Bullet = ship.spawnBullet()
@@ -167,17 +170,28 @@
 			
 			
 			for (var i:int = 0; i < 1.0/tickTime; i++) {
-				ship.tick(tickTime)
 				
+				// Tick the ship Forward
+				if (!ship.Dead) {
+					ship.tick(tickTime)
+				}
+				
+				// Tick the Bullets Forward
 				if (bullets.length > 0) {
 					bullets = bullets.filter(tickBullets)
 				}
+				
+				// Tick the Asteroids Forward
 				if (asteroids.length > 0) {
 					asteroids = asteroids.filter(tickAsteroids)
 				}
+				
+				// Check for Collisons with the Ship
 				if (asteroids.length > 0 && !ship.Dead) {
 					asteroids.forEach(collideShip)
 				}
+				
+				// Collide bullets and asteroids
 				if (bullets.length > 0) {
 					bullets = bullets.filter(collideBullets)
 				}
@@ -185,12 +199,15 @@
 			
 			if (ship.Dead && ship.lives > 0) {
 				deathTicks++
+				
+				// Respawn Ship
+				// This needs to do it intelligently so you don't spawn on an asteroid
 				if (deathTicks >= 60) {
 					deathTicks = 0
 					addChild(ship)
 					ship.Dead = false
-					ship.X = 800 / 2
-					ship.Y = 600 / 2
+					ship.X = StageWidth / 2
+					ship.Y = StageHeight / 2
 				}
 			}
 		}
@@ -233,7 +250,7 @@
 			return true
 		}
 		
-		var tickTime:Number = .1
+		var tickTime:Number = .025
 		public function tickBullets(ele:Bullet, i:int, arr:Array):Boolean {
 			if (ele.Dead) {
 				this.removeChild(ele)

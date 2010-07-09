@@ -8,7 +8,6 @@
 	public interface I_Asteroid {
 		function canSplit():Boolean
 		function split(dir:Vector2D):Asteroid
-		//function 
 	}
 	
 }

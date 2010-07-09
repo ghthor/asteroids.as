@@ -24,6 +24,10 @@
 		public function Death() {
 			lives -= 1
 			parent.removeChild(this)
+			velocity.scale(0)
+			facing.setVector2D(0, -1)
+			turretFacing.setByVector2D(facing)
+			rotation = 0
 		}
 		
 		public function tick(time:Number) {

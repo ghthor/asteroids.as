@@ -14,22 +14,20 @@
 		public var facing:Vector2D = new Vector2D()
 		public static var canvas:Canvas
 		
-		var _X:Number
-		
 		public function Entity() {
 			stop()
 		}
 		
+		// This is to fix the truncation bug when using normal x,y of displayobject
+		var _X:Number
+		var _Y:Number
 		public function get X():Number { return _X; }
-		
 		public function set X(value:Number):void {
 			_X = value;
 			x = _X
 		}
-		var _Y:Number
-		
+				
 		public function get Y():Number { return _Y; }
-		
 		public function set Y(value:Number):void {
 			_Y = value;
 			y = _Y
@@ -49,32 +47,29 @@
 			}
 		}
 		
+		// 1 = pixel checking
+		// .5 = 1/2 pixel resolution
 		const hitTestRes:Number = 1
 		public function ChkCollide(entity:Entity):Boolean {
 			if (hitTestObject(entity)) {
 				var overlapRect:Rectangle = getBounds(stage).intersection(entity.getBounds(stage))
-				//canvas.graphics.clear()
-				//canvas.defaults()
-				//canvas.graphics.drawRect(overlapRect.left, overlapRect.top, overlapRect.width, overlapRect.height)
-				//var bounds:Rectangle = getBounds(stage)
-				//canvas.graphics.drawRect(bounds.left, bounds.top, bounds.width, bounds.height)
-				//bounds = entity.getBounds(stage)
-				//canvas.graphics.drawRect(bounds.left, bounds.top, bounds.width, bounds.height)
+				
 				var meHit:Boolean = false
 				var paramHit:Boolean = false
-				//canvas.graphics.moveTo(overlapRect.left, overlapRect.top)
+				
+				// Check all the points inside the overlapRect against both objects
+				// Inefficent but it works
 				for (var horz:Number = 0; horz <= overlapRect.width; horz += hitTestRes) {
 					for (var vert:Number = 0; vert <= overlapRect.height; vert += hitTestRes) {
 						
 						meHit = hitTestPoint(overlapRect.left + horz, overlapRect.top + vert, true)
 						paramHit = entity.hitTestPoint(overlapRect.left + horz, overlapRect.top + vert, true)
-						//trace(meHit, paramHit)
+						
 						if (meHit && paramHit) {
-							//canvas.graphics.lineStyle(1, 0xFF0000)
-							//canvas.graphics.lineTo(overlapRect.left + horz, overlapRect.top + vert)
+							
 							return true
 						}
-						//canvas.graphics.lineTo(overlapRect.left + horz, overlapRect.top + vert)
+						
 					}
 				}
 			}

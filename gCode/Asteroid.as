@@ -12,9 +12,11 @@
 	 */
 	public class Asteroid extends Entity implements I_Asteroid {
 		
-		public static const MaxSpeed:Number = 8
+		// Bounds for random generation
+		public static const MaxSpeed:Number = 4
 		public static const MaxSpin:Number = 3 // degrees per tick
 		
+		// Rotation in degree's per tick
 		var degPerTick:Number = 0
 		
 		public function tick(time:Number) {
@@ -47,13 +49,8 @@
 			
 			X = Math.random() * GameScreen.StageWidth
 			Y = Math.random() * GameScreen.StageHeight
-			//x = realX
-			//y = realY
 			
 			randomVelocity()
-			
-			velocity.makeLength(Math.random() * MaxSpeed)
-			
 			randomColor()
 			
 			return this
@@ -70,9 +67,10 @@
 		public function randomVelocity() {
 			velocity.x = (Math.random() * 2) - 1
 			velocity.y = (Math.random() * 2) - 1
-			if (velocity.length <= 1) {
+			if (velocity.length <= .25) {
 				randomVelocity()
 			}
+			velocity.makeLength(Math.random() * MaxSpeed)
 		}
 		
 		const degOffsetMax:Number = 20
