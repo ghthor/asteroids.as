@@ -4,6 +4,7 @@
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
+	import gCode.Bullet;
 	import gCode.Ship;
 	import qEngine.Console;
 	import qEngine.qForm.Form;
@@ -23,6 +24,8 @@
 		
 		var maxSpeed:Number = 10 // pixels per Frame
 		
+		var bullets:Array = new Array()
+		
 		public static const StageWidth:Number = 800
 		public static const StageHeight:Number = 600
 		public static const FPS:Number = 60
@@ -30,6 +33,9 @@
 		public static const MaxSpeed:Number = 10 // pixels per frame
 		public static const Drag:Number = -.015
 		public static const RotationPerTick:Number = 6 // degs per tick
+		
+		public static const BulletSpeed:Number = 11
+		public static const BulletsPerSec:Number = 6
 		
 		public function GameScreen() {
 			stop();			
@@ -57,28 +63,28 @@
 		var rotLeft:Boolean = false
 		var firing:Boolean = false
 		
-		var Key_W = 0
+		var Key_W = 87
 		var Key_A = 65
-		var Key_S = 0
-		var Key_D = 0
+		var Key_S = 83
+		var Key_D = 68
 		var Key_Z = 90
 		
 		private function keyDown(e:KeyboardEvent):void {
 			//trace("Key Down: " + e.keyCode)
 			switch (e.keyCode) {
-				//case Key_W:
+				case Key_W:
 				case Keyboard.UP:
 					forward = true
 					break
-				//case Key_S:
+				case Key_S:
 				case Keyboard.DOWN:
 					backward = true
 					break
-				//case Key_A:
+				case Key_A:
 				case Keyboard.LEFT:
 					rotLeft = true
 					break
-				//case Key_D:
+				case Key_D:
 				case Keyboard.RIGHT:
 					rotRight = true
 					break
@@ -92,19 +98,19 @@
 		
 		private function keyUp(e:KeyboardEvent):void {
 			switch(e.keyCode) {
-				//case Key_W:
+				case Key_W:
 				case Keyboard.UP:
 					forward = false
 					break
-				//case Key_S:
+				case Key_S:
 				case Keyboard.DOWN:
 					backward = false
 					break
-				//case Key_A:
+				case Key_A:
 				case Keyboard.LEFT:
 					rotLeft = false
 					break
-				//case Key_D:
+				case Key_D:
 				case Keyboard.RIGHT:
 					rotRight = false
 					break
@@ -116,6 +122,7 @@
 			}
 		}
 		
+		var fireTick:Number = 60
 		private function tick(e:Event):void {
 			
 			//ship.updateFacing(mouseCoords)
@@ -131,8 +138,31 @@
 			if (backward) {
 				ship.accelBackwards()
 			}
+			if (firing) {
+				if (fireTick >= FPS/BulletsPerSec) {
+					fireTick = 0
+					var b:Bullet = ship.spawnBullet()
+					addChild(b)
+					bullets.push(b)
+				}
+			}
+			fireTick++
 			ship.tick()
+			
+			if (bullets.length > 0) {
+				bullets = bullets.filter(tickBullets)
+			}
 			// The Game Loop
+		}
+		
+		public function tickBullets(ele:Bullet, i:int, arr:Array):Boolean {
+			if (ele.Dead) {
+				this.removeChild(ele)
+				return false
+			}else {
+				ele.tick()
+				return true
+			}
 		}
 		
 		var mouseCoords:Vector2D = new Vector2D()

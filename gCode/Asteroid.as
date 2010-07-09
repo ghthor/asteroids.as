@@ -5,7 +5,7 @@
 	 * ...
 	 * @author ...
 	 */
-	public class Asteroid extends MovieClip {
+	public class Asteroid extends Entity {
 		
 	}
 	

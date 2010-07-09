@@ -1,5 +1,6 @@
 ﻿package gCode {
 	import flash.display.MovieClip;
+	import flash.geom.Point;
 	import gCode.Form.GameScreen;
 	import qEngine.qMath.Vector2D;
 	
@@ -7,12 +8,11 @@
 	 * ...
 	 * @author ...
 	 */
-	public class Ship extends MovieClip {
+	public class Ship extends Entity {
 		
 		public var bulletSpawnPt:MovieClip
-		var velocity:Vector2D = new Vector2D()
-		public var facing:Vector2D = new Vector2D(0, -1)
-		public var turretFacing:Vector2D = new Vector2D(0, -1)
+		
+		public var turretFacing:Vector2D = new Vector2D()
 		
 		public function Ship() {
 			stop()
@@ -34,17 +34,7 @@
 				velocity.addVector2D(v)
 			}
 			// Wrap Around Code
-			if (x > GameScreen.StageWidth) {
-				x = x - GameScreen.StageWidth
-			}else if (x < 0) {
-				x = GameScreen.StageWidth + x
-			}
-			
-			if (y > GameScreen.StageHeight) {
-				y = y - GameScreen.StageHeight
-			}else if (y < 0) {
-				y = GameScreen.StageHeight + y
-			}
+			WrapAround()
 			//trace(x, y)
 		}
 		
@@ -71,6 +61,7 @@
 		
 		public function rotate(deg:Number) {
 			facing.rotateByDegree(deg)
+			turretFacing.rotateByDegree(deg)
 			rotation = rotation + deg
 		}
 		
@@ -86,9 +77,29 @@
 			//rotation = deg + 90
 		}
 		
+		private function getBulletSpawnPt():Point {
+			var spawnPt:Point = new Point(bulletSpawnPt.x, bulletSpawnPt.y)
+			//trace(spawnPt, "local")
+			var pt:Point = localToGlobal(spawnPt)
+			//trace(pt, "global")
+			return pt
+		}
+		
+		public function spawnBullet():Bullet {
+			var b:Bullet = new Bullet()
+			b.facing = turretFacing
+			b.velocity = new Vector2D(b.facing.x, b.facing.y)
+			b.velocity.makeLength(GameScreen.BulletSpeed)
+			var pt:Point = getBulletSpawnPt()
+			b.x = pt.x
+			b.y = pt.y
+			return b
+		}
+		
 		public function initialize() {
 			bulletSpawnPt = BulletSpawnPt
-			//velocity.setVector2D(.5,-1)
+			facing.setVector2D(0, -1)
+			turretFacing.setByVector2D(facing)
 		}
 		
 	}
