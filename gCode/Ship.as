@@ -23,6 +23,7 @@
 		
 		public function Death() {
 			lives -= 1
+			Dead = true
 			parent.removeChild(this)
 			velocity.scale(0)
 			facing.setVector2D(0, -1)

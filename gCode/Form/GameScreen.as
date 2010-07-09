@@ -215,8 +215,9 @@
 		var deathTicks:int = 0
 		public function collideShip(asteroid:Asteroid, i:int, arr:Array):void {
 			var hit:Boolean = ship.ChkCollide(asteroid)
+			
+			// If hit its time to die
 			if (hit) {
-				ship.Dead = true
 				ship.Death()
 			}
 		}
@@ -266,8 +267,8 @@
 			return true
 		}
 		
+		// For mouse based Targeting
 		var mouseCoords:Vector2D = new Vector2D()
-		// Right now I'm using mouse based targeting
 		private function updateFacing(e:MouseEvent):void {
 			mouseCoords.setVector2D(e.stageX, e.stageY)
 			//ship.updateFacing(mouseCoords)
@@ -279,6 +280,7 @@
 			FormManager.theStage.addEventListener(KeyboardEvent.KEY_UP, keyUp)
 			FormManager.theStage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown)
 			FormManager.theStage.addEventListener(MouseEvent.MOUSE_MOVE, updateFacing)
+			stage.focus = stage
 		}
 		
 		public function disableAllEvents():void{
