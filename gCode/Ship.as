@@ -11,7 +11,8 @@
 		
 		public var bulletSpawnPt:MovieClip
 		var velocity:Vector2D = new Vector2D()
-		public var facing:Vector2D = new Vector2D(0,-1)
+		public var facing:Vector2D = new Vector2D(0, -1)
+		public var turretFacing:Vector2D = new Vector2D(0, -1)
 		
 		public function Ship() {
 			stop()
@@ -22,12 +23,16 @@
 			x += velocity.x
 			y += velocity.y
 			
-			if (velocity.length <= Math.abs(GameScreen.Drag)) {
+			// Apply Drag
+			if (velocity.length <= Math.abs(GameScreen.Drag) || velocity.length == 0) {
 				velocity.scale(0)
+				//trace(velocity, "Scaled by Zero")
 			}else {
-				velocity.addLength(GameScreen.Drag)
+				var v:Vector2D = velocity.toUnitVector()
+				v.Invert()
+				v.makeLength(Math.abs(GameScreen.Drag))
+				velocity.addVector2D(v)
 			}
-			
 			// Wrap Around Code
 			if (x > GameScreen.StageWidth) {
 				x = x - GameScreen.StageWidth
@@ -40,6 +45,7 @@
 			}else if (y < 0) {
 				y = GameScreen.StageHeight + y
 			}
+			//trace(x, y)
 		}
 		
 		// Accelerate Foward
@@ -47,6 +53,9 @@
 			var dir:Vector2D = facing.toUnitVector()
 			dir.scale(GameScreen.Acceleration)
 			velocity.addVector2D(dir)
+			if (velocity.length > GameScreen.MaxSpeed) {
+				velocity.makeLength(GameScreen.MaxSpeed)
+			}
 		}
 		
 		// Accelerate Backwards
@@ -55,15 +64,26 @@
 			dir.Invert()
 			dir.scale(GameScreen.Acceleration)
 			velocity.addVector2D(dir)
+			if (velocity.length > GameScreen.MaxSpeed) {
+				velocity.makeLength(GameScreen.MaxSpeed)
+			}
+		}
+		
+		public function rotate(deg:Number) {
+			facing.rotateByDegree(deg)
+			rotation = rotation + deg
 		}
 		
 		// This is for mouse based targeting
-		public function updateFacing(mouseCoord:Vector2D) {
+		public function updateTurrentFacing(mouseCoord:Vector2D) {
 			var loc:Vector2D = new Vector2D(x, y)
-			facing = loc.OffsetTo(mouseCoord)
-			facing.makeUnitVector()
-			var deg:Number = facing.toDegrees()
-			rotation = deg + 90
+			var newFacing:Vector2D = loc.OffsetTo(mouseCoord)
+			if (newFacing.length == 0 || isNaN(newFacing.x) || isNaN(newFacing.y)) {
+				return
+			}
+			turretFacing = newFacing.toUnitVector()
+			//var deg:Number = turretFacing.toDegrees()
+			//rotation = deg + 90
 		}
 		
 		public function initialize() {
