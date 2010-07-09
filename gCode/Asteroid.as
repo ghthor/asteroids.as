@@ -54,17 +54,17 @@
 		public function randomVelocity() {
 			velocity.x = (Math.random() * 2) - 1
 			velocity.y = (Math.random() * 2) - 1
-			if (velocity.length == 0) {
+			if (velocity.length <= .25) {
 				randomVelocity()
 			}
 		}
 		
 		const degOffsetMax:Number = 20
 		
-		public function randomMedFrom():Asteroid {
+		public function randomMedFrom(dir:Vector2D):Asteroid {
 			var med:MedAsteroid = new MedAsteroid()
-			med.x = x
-			med.y = y
+			med.x = x + dir.x
+			med.y = y + dir.y
 			med.randomColor()
 			med.randomSpin()
 			med.velocity.setByVector2D(velocity)
@@ -79,8 +79,8 @@
 			return true
 		}
 		
-		public function split(vector:Vector2D):Asteroid{
-			return randomMedFrom()
+		public function split(dir:Vector2D):Asteroid{
+			return randomMedFrom(dir)
 		}
 	}
 	

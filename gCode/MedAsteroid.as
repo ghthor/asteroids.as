@@ -8,16 +8,30 @@
 	public class MedAsteroid extends Asteroid implements I_Asteroid {
 		
 		public function MedAsteroid() {
-			scaleX = .5
-			scaleY = .5
+			var dev:Number = ((Math.random() * .1 * 2) - .1) // min/max .4/.6
+			scaleX = .5 + dev
+			scaleY = .5 + dev
 		}
 		
 		public override function canSplit():Boolean{
-			return false
+			return true
 		}
 		
-		public override function split(vector:Vector2D):Asteroid{
-			return randomMedFrom()
+		public function randomSmallFrom(dir:Vector2D):Asteroid {
+			var small:SmallAsteroid = new SmallAsteroid()
+			small.x = x + dir.x
+			small.y = y + dir.y
+			small.randomColor()
+			small.randomSpin()
+			small.velocity.setByVector2D(velocity)
+			small.velocity.scale(Math.random() + .5)
+			small.velocity.rotateByDegree((Math.random() * degOffsetMax * 2) - degOffsetMax)
+			return small
+		}
+		
+		
+		public override function split(dir:Vector2D):Asteroid{
+			return randomSmallFrom(dir)
 		}
 	}
 	

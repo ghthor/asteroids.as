@@ -188,10 +188,15 @@
 					var asteroid:I_Asteroid = (asteroids[i] as I_Asteroid)
 					if (asteroid.canSplit()) {
 						// Split the Asteroid
+						var dir:Vector2D = new Vector2D(bullet.velocity.x, bullet.velocity.y)
+						dir.rotateByDegree(90)
+						dir.makeUnitVector()
+						dir.scale((asteroid as Asteroid).width/5)
 						for (var j:int = 0; j < 2; j++) {
-							var temp:Asteroid = asteroid.split(new Vector2D())
+							var temp:Asteroid = asteroid.split(dir)
 							addChild(temp)
 							asteroids.push(temp)
+							dir.rotateByDegree(180)
 						}
 					}
 					removeChild(asteroids[i])
