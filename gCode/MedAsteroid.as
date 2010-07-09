@@ -19,12 +19,12 @@
 		
 		public function randomSmallFrom(dir:Vector2D):Asteroid {
 			var small:SmallAsteroid = new SmallAsteroid()
-			small.x = x + dir.x
-			small.y = y + dir.y
+			small.X = X + dir.x
+			small.Y = Y + dir.y
 			small.randomColor()
 			small.randomSpin()
 			small.velocity.setByVector2D(velocity)
-			small.velocity.scale(Math.random() + .5)
+			small.velocity.scale(Math.random() + .1)
 			small.velocity.rotateByDegree((Math.random() * degOffsetMax * 2) - degOffsetMax)
 			return small
 		}

@@ -29,7 +29,7 @@
 		
 		var bullets:Array = new Array()
 		
-		var numRoids:Number = 7
+		var numRoids:Number = 20
 		var asteroids:Array = new Array()
 		
 		public static const StageWidth:Number = 800
@@ -174,9 +174,6 @@
 					bullets = bullets.filter(collideBullets)
 				}
 			}
-			
-			
-			// The Game Loop
 		}
 		
 		public function collideBullets(bullet:Bullet, i:int, arr:Array):Boolean {

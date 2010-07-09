@@ -1,4 +1,5 @@
 ﻿package gCode {
+	import flash.events.MouseEvent;
 	import qEngine.qMath.Vector2D;
 	import flash.display.MovieClip;
 	import flash.geom.ColorTransform;
@@ -17,8 +18,14 @@
 		var degPerTick:Number = 0
 		
 		public function tick(time:Number) {
-			x = x + (velocity.x * time)
-			y = y + (velocity.y * time)
+			if (debug) { 
+				trace(X, Y)
+				trace(velocity.x * time, velocity.y * time)
+				trace(X + (velocity.x * time), Y + (velocity.y * time))
+			}
+			X = X + (velocity.x * time)
+			Y = Y + (velocity.y * time)
+			if (debug) { trace(x, X, y, Y); debug = false }
 			
 			rotation = rotation + (degPerTick * time)
 			WrapAround()
@@ -26,13 +33,22 @@
 		
 		public function Asteroid() {
 			stop()
+			addEventListener(MouseEvent.CLICK, debugBug)
+		}
+		
+		var debug:Boolean = false
+		private function debugBug(e:MouseEvent):void {
+			trace(velocity)
+			debug = true
 		}
 		
 		public function randomize():Asteroid {
 			randomSpin()
 			
-			x = Math.random() * GameScreen.StageWidth
-			y = Math.random() * GameScreen.StageHeight
+			X = Math.random() * GameScreen.StageWidth
+			Y = Math.random() * GameScreen.StageHeight
+			//x = realX
+			//y = realY
 			
 			randomVelocity()
 			
@@ -54,7 +70,7 @@
 		public function randomVelocity() {
 			velocity.x = (Math.random() * 2) - 1
 			velocity.y = (Math.random() * 2) - 1
-			if (velocity.length <= .25) {
+			if (velocity.length <= 1) {
 				randomVelocity()
 			}
 		}
@@ -63,8 +79,8 @@
 		
 		public function randomMedFrom(dir:Vector2D):Asteroid {
 			var med:MedAsteroid = new MedAsteroid()
-			med.x = x + dir.x
-			med.y = y + dir.y
+			med.X = X + dir.x
+			med.Y = Y + dir.y
 			med.randomColor()
 			med.randomSpin()
 			med.velocity.setByVector2D(velocity)

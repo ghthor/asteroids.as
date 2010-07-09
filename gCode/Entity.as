@@ -12,18 +12,34 @@
 		public var velocity:Vector2D = new Vector2D()
 		public var facing:Vector2D = new Vector2D()
 		
+		var _X:Number
+		
+		public function get X():Number { return _X; }
+		
+		public function set X(value:Number):void {
+			_X = value;
+			x = _X
+		}
+		var _Y:Number
+		
+		public function get Y():Number { return _Y; }
+		
+		public function set Y(value:Number):void {
+			_Y = value;
+			y = _Y
+		}
 		
 		public function WrapAround() {
-			if (x > GameScreen.StageWidth) {
-				x = x - GameScreen.StageWidth
-			}else if (x < 0) {
-				x = GameScreen.StageWidth + x
+			if (X > GameScreen.StageWidth) {
+				X = X - GameScreen.StageWidth
+			}else if (X < 0) {
+				X = GameScreen.StageWidth + X
 			}
 			
-			if (y > GameScreen.StageHeight) {
-				y = y - GameScreen.StageHeight
-			}else if (y < 0) {
-				y = GameScreen.StageHeight + y
+			if (Y > GameScreen.StageHeight) {
+				Y = Y - GameScreen.StageHeight
+			}else if (Y < 0) {
+				Y = GameScreen.StageHeight + Y
 			}
 		}
 		
