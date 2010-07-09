@@ -15,8 +15,8 @@
 		
 		public var Dead:Boolean = false
 		public function tick(time:Number) {
-			x = x + (velocity.x * time)
-			y = y + (velocity.y * time)
+			X = X + (velocity.x * time)
+			Y = Y + (velocity.y * time)
 			
 			DistanceTraveled += (velocity.length * time)
 			if (DistanceTraveled >= MaxTravelDistance) { Dead = true }		

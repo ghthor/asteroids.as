@@ -7,6 +7,7 @@
 	import flash.ui.Keyboard;
 	import gCode.Asteroid;
 	import gCode.Bullet;
+	import gCode.Entity;
 	import gCode.I_Asteroid;
 	import gCode.Ship;
 	import qEngine.Console;
@@ -29,7 +30,7 @@
 		
 		var bullets:Array = new Array()
 		
-		var numRoids:Number = 20
+		var numRoids:Number = 4
 		var asteroids:Array = new Array()
 		
 		public static const StageWidth:Number = 800
@@ -41,7 +42,7 @@
 		public static const RotationPerTick:Number = 6 // degs per tick
 		
 		public static const BulletSpeed:Number = 11
-		public static const BulletsPerSec:Number = 6
+		public static const BulletsPerSec:Number = 8
 		
 		public function GameScreen() {
 			stop();			
@@ -50,17 +51,19 @@
 		/// Run After All Forms Have Been Created
 		public function initialize():void {
 			
-			canvas.x = 0;
-			canvas.y = 0;
-			addChild(canvas);
+			canvas.x = 0
+			canvas.y = 0
+			addChild(canvas)
+			
+			Entity.canvas = canvas
 			
 			addChild(Console.display)
 			Console.display.y = 100
 			
 			ship.initialize()
 			addChild(ship)
-			ship.x = 800 / 2
-			ship.y = 600 / 2
+			ship.X = 800 / 2
+			ship.Y = 600 / 2
 			
 			for (var i:int = 0; i < numRoids; i++) {
 				var a:Asteroid = new Asteroid()
@@ -105,6 +108,7 @@
 					firing = true
 					break
 				default:
+					ship.lives += 1
 					trace("Key Down: " + e.keyCode)
 			}
 		}
@@ -160,19 +164,43 @@
 				}
 			}
 			fireTick++
-			ship.tick()
 			
-			for (var i:int = 0; i < 1/tickTime; i++) {
+			
+			for (var i:int = 0; i < 1.0/tickTime; i++) {
+				ship.tick(tickTime)
+				
 				if (bullets.length > 0) {
 					bullets = bullets.filter(tickBullets)
 				}
 				if (asteroids.length > 0) {
 					asteroids = asteroids.filter(tickAsteroids)
 				}
-				
+				if (asteroids.length > 0 && !ship.Dead) {
+					asteroids.forEach(collideShip)
+				}
 				if (bullets.length > 0) {
 					bullets = bullets.filter(collideBullets)
 				}
+			}
+			
+			if (ship.Dead && ship.lives > 0) {
+				deathTicks++
+				if (deathTicks >= 60) {
+					deathTicks = 0
+					addChild(ship)
+					ship.Dead = false
+					ship.X = 800 / 2
+					ship.Y = 600 / 2
+				}
+			}
+		}
+		
+		var deathTicks:int = 0
+		public function collideShip(asteroid:Asteroid, i:int, arr:Array):void {
+			var hit:Boolean = ship.ChkCollide(asteroid)
+			if (hit) {
+				ship.Dead = true
+				ship.Death()
 			}
 		}
 		
@@ -205,7 +233,7 @@
 			return true
 		}
 		
-		var tickTime:Number = .05
+		var tickTime:Number = .1
 		public function tickBullets(ele:Bullet, i:int, arr:Array):Boolean {
 			if (ele.Dead) {
 				this.removeChild(ele)

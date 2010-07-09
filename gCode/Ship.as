@@ -14,14 +14,22 @@
 		
 		public var turretFacing:Vector2D = new Vector2D()
 		
+		public var Dead:Boolean = false
+		public var lives:int = 10
+		
 		public function Ship() {
 			stop()
 		}
 		
-		public function tick() {
+		public function Death() {
+			lives -= 1
+			parent.removeChild(this)
+		}
+		
+		public function tick(time:Number) {
 			//velocity.addVector2D(acceleration)
-			x += velocity.x
-			y += velocity.y
+			X = X + (velocity.x * time)
+			Y = Y + (velocity.y * time)
 			
 			// Apply Drag
 			if (velocity.length <= Math.abs(GameScreen.Drag) || velocity.length == 0) {
@@ -30,7 +38,7 @@
 			}else {
 				var v:Vector2D = velocity.toUnitVector()
 				v.Invert()
-				v.makeLength(Math.abs(GameScreen.Drag))
+				v.makeLength(Math.abs(GameScreen.Drag) * time)
 				velocity.addVector2D(v)
 			}
 			// Wrap Around Code
@@ -91,8 +99,8 @@
 			b.velocity = new Vector2D(b.facing.x, b.facing.y)
 			b.velocity.makeLength(GameScreen.BulletSpeed)
 			var pt:Point = getBulletSpawnPt()
-			b.x = pt.x
-			b.y = pt.y
+			b.X = pt.x
+			b.Y = pt.y
 			return b
 		}
 		
