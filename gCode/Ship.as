@@ -100,6 +100,7 @@
 		
 		public function spawnBullet():Bullet {
 			var b:Bullet = new Bullet()
+			b.initialize()
 			b.facing = turretFacing
 			b.velocity = new Vector2D(b.facing.x, b.facing.y)
 			b.velocity.makeLength(GameScreen.BulletSpeed)
@@ -109,7 +110,8 @@
 			return b
 		}
 		
-		public function initialize() {
+		public override function initialize() {
+			super.initialize()
 			bulletSpawnPt = BulletSpawnPt
 			facing.setVector2D(0, -1)
 			turretFacing.setByVector2D(facing)

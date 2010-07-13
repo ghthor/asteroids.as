@@ -77,6 +77,7 @@
 		
 		public function randomMedFrom(dir:Vector2D):Asteroid {
 			var med:MedAsteroid = new MedAsteroid()
+			med.initialize()
 			med.X = X + dir.x
 			med.Y = Y + dir.y
 			med.randomColor()

@@ -19,6 +19,7 @@
 		
 		public function randomSmallFrom(dir:Vector2D):Asteroid {
 			var small:SmallAsteroid = new SmallAsteroid()
+			small.initialize()
 			small.X = X + dir.x
 			small.Y = Y + dir.y
 			small.randomColor()

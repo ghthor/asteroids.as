@@ -70,6 +70,7 @@
 			
 			for (var i:int = 0; i < numRoids; i++) {
 				var a:Asteroid = new Asteroid()
+				a.initialize()
 				a.randomize()
 				addChild(a)
 				asteroids.push(a)
