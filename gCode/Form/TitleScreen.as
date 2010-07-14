@@ -1,5 +1,6 @@
 ﻿package gCode.Form
 {
+	import flash.display.SimpleButton;
 	import flash.events.MouseEvent;
 	import qEngine.qForm.Form;
 	import qEngine.qForm.I_Form;
@@ -9,7 +10,8 @@
 	 */
 	public class TitleScreen extends Form implements I_Form
 	{		
-		var btnStart:SimpleButton;
+		var btnStart:SimpleButton
+		var btnOptions:SimpleButton
 		
 		public function TitleScreen() {
 			stop();			
@@ -19,19 +21,26 @@
 		/// Run After All Forms Have Been Created
 		public function initialize():void {
 			btnStart = _btnStart
+			btnOptions = _btnOptions
 			switchToForm(TitleScreen.id)
 		}
 		
 		public function enableAllEvents():void{
 			btnStart.addEventListener(MouseEvent.CLICK, gotoGameScreen);
+			btnOptions.addEventListener(MouseEvent.CLICK, gotoOptionsScreen);
 		}
 		
 		public function disableAllEvents():void{
 			btnStart.removeEventListener(MouseEvent.CLICK, gotoGameScreen);
+			btnOptions.removeEventListener(MouseEvent.CLICK, gotoOptionsScreen);
 		}
 		
 		private function gotoGameScreen(e:MouseEvent):void {
 			switchToForm(GameScreen.id);
+		}
+		
+		private function gotoOptionsScreen(e:MouseEvent):void {
+			switchToForm(OptionsScreen.id);
 		}
 		
 		/// Stores the Index in the FormManager's Array of This Form

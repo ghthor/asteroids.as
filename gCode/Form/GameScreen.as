@@ -4,6 +4,7 @@
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import gCode.Asteroid;
 	import gCode.Bullet;
@@ -26,8 +27,7 @@
 		var canvas:Canvas = new Canvas();
 		
 		// Player controlled Ship
-		var ship:Ship = new Ship()
-		public static const maxSpeed:Number = 10 // pixels per Frame
+		var ship:Ship;
 		
 		// The Bullets that are in Play fired from the ship
 		var bullets:Array = new Array()
@@ -39,20 +39,26 @@
 		var numRoids:Number = 5
 		var asteroids:Array = new Array()
 		
-		public static const StageWidth:Number = 800
-		public static const StageHeight:Number = 600
-		public static const FPS:Number = 60
-		public static const Acceleration:Number = .25 // pixels per frame
-		public static const MaxSpeed:Number = 10 // pixels per frame
-		public static const Drag:Number = -.015
-		public static const RotationPerTick:Number = 6 // degs per tick
+		public static var StageWidth:Number = 800
+		public static var StageHeight:Number = 600
+		public static var FPS:Number = 60
+		public static var Acceleration:Number = .25 // pixels per frame
+		public static var MaxSpeed:Number = 10 // pixels per frame
+		public static var Drag:Number = -.015
+		public static var RotationPerTick:Number = 6 // degs per tick
+		
+		public var gui_lives:TextField;
 		
 		public function GameScreen() {
-			stop();			
+			stop();
+			ship = new Ship(this)
 		}
 		
 		/// Run After All Forms Have Been Created
 		public function initialize():void {
+			
+			gui_lives = _gui_lives
+			gui_lives.text = ship.lives.toString()
 			
 			canvas.x = 0
 			canvas.y = 0
@@ -64,7 +70,7 @@
 			//Console.display.y = 100
 			
 			ship.initialize()
-			addChild(ship)
+			addChildAt(ship,0)
 			ship.X = StageWidth / 2
 			ship.Y = StageHeight / 2
 			
@@ -72,7 +78,7 @@
 				var a:Asteroid = new Asteroid()
 				a.initialize()
 				a.randomize()
-				addChild(a)
+				addChildAt(a,0)
 				asteroids.push(a)
 			}
 		}
@@ -247,7 +253,7 @@
 						dir.scale((asteroid as Asteroid).width/5)
 						for (var j:int = 0; j < 2; j++) {
 							var temp:Asteroid = asteroid.split(dir)
-							addChild(temp)
+							addChildAt(temp,0)
 							asteroids.push(temp)
 							dir.rotateByDegree(180)
 						}
@@ -261,7 +267,7 @@
 			return true
 		}
 		
-		var tickResolution:Number = .025
+		var tickResolution:Number = .05
 		
 		/// filter func for Bullets tick
 		public function tickBullets(bullet:Bullet, i:int, arr:Array):Boolean {

@@ -10,20 +10,21 @@
 	public class Asteroids extends FormManager {
 		
 		public function Asteroids() {
-			addEventListener(Event.ENTER_FRAME, load);		
+			addEventListener(Event.ENTER_FRAME, load)
 		}
 		
 		public function load(e:Event):void {
-			removeEventListener(Event.ENTER_FRAME, load);
+			removeEventListener(Event.ENTER_FRAME, load)
 			super.initialize()
 			
 			// Add Forms to Managed Array
-			Console.initialize();
-			addForm(new TitleScreen());
-			addForm(new GameScreen());
+			Console.initialize()
+			addForm(new TitleScreen())
+			addForm(new GameScreen())
+			addForm(new OptionsScreen())
 			
 			// initialize Each Form and Lock the Array from more Additions
-			initializeAndLock();
+			initializeAndLock()
 		}
 	}
 	

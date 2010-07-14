@@ -15,9 +15,23 @@
 		public var turretFacing:Vector2D = new Vector2D()
 		
 		public var Dead:Boolean = false
-		public var lives:int = 10
+		private var _lives:int = 10
 		
-		public function Ship() {
+		private var _bulletsFired:int = 0
+		
+		public function get bulletsFired():int { return _bulletsFired; }
+		
+		public function get lives():int { return _lives; }
+		
+		public function set lives(value:int):void {
+			_lives = value;
+			gameScreen.gui_lives.text = _lives.toString()
+		}
+		
+		private var gameScreen:GameScreen;
+		
+		public function Ship(_gameScreen:GameScreen) {
+			gameScreen = _gameScreen
 			stop()
 		}
 		
@@ -100,6 +114,7 @@
 		
 		public function spawnBullet():Bullet {
 			var b:Bullet = new Bullet()
+			
 			b.initialize()
 			b.facing = turretFacing
 			b.velocity = new Vector2D(b.facing.x, b.facing.y)
@@ -107,6 +122,8 @@
 			var pt:Point = getBulletSpawnPt()
 			b.X = pt.x
 			b.Y = pt.y
+			
+			_bulletsFired++
 			return b
 		}
 		
